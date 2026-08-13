@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     
     // ===================================================================
-    // 1. WEB AUDIO API SYNTHESIZER SOUND EFFECTS (ZERO EXTERNAL FILES)
+    // 1. WEB AUDIO API SYNTHESIZER SOUND EFFECTS
     // ===================================================================
     let sfxEnabled = true;
     let audioCtx = null;
@@ -43,7 +43,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Play blip on interactive buttons & cards
     document.querySelectorAll('.bento-card, .filter-tag, .theme-btn, .brutal-btn, .modal-btn').forEach(elem => {
         elem.addEventListener('mouseenter', () => playBlip(900, 'sine', 0.03));
         elem.addEventListener('click', () => playBlip(450, 'square', 0.05));
@@ -127,37 +126,90 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ===================================================================
-    // 5. UPTIME KUMA HEARTBEAT & LATENCY CHART VISUALIZER
+    // 5. UPTIME KUMA LATENCY LINE / AREA CHART VISUALIZER (NAIK TURUN)
     // ===================================================================
     const uptimeContainer = document.getElementById('uptime-container');
+
+    // Generator SVG Grafik Garis Latency Naik Turun (Sparkline)
+    const generateLatencyChartSvg = (history, serviceId) => {
+        if (!history || history.length === 0) return '';
+        
+        const width = 280;
+        const height = 45;
+        const padding = 6;
+        
+        const pings = history.map(h => typeof h.ping === 'number' ? h.ping : 10);
+        const minPing = Math.min(...pings, 1);
+        const maxPing = Math.max(...pings, minPing + 15);
+        
+        // Compute SVG point coordinates
+        const points = pings.map((ping, i) => {
+            const x = padding + (i / Math.max(pings.length - 1, 1)) * (width - 2 * padding);
+            const normalizedY = (ping - minPing) / Math.max(maxPing - minPing, 1);
+            const y = height - padding - (normalizedY * (height - 2 * padding));
+            return { x: x.toFixed(1), y: y.toFixed(1), ping };
+        });
+        
+        const pointsString = points.map(p => `${p.x},${p.y}`).join(' ');
+        const firstX = padding;
+        const lastX = width - padding;
+        const areaPath = `M ${firstX},${height - padding} L ${pointsString} L ${lastX},${height - padding} Z`;
+        
+        const gradId = `chart-grad-${serviceId}`;
+
+        return `
+            <svg viewBox="0 0 ${width} ${height}" class="latency-chart-svg" preserveAspectRatio="none">
+                <defs>
+                    <linearGradient id="${gradId}" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.4"/>
+                        <stop offset="100%" stop-color="var(--accent)" stop-opacity="0.0"/>
+                    </linearGradient>
+                </defs>
+                <path d="${areaPath}" fill="url(#${gradId})" />
+                <polyline points="${pointsString}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                ${points.map((pt) => `
+                    <circle cx="${pt.x}" cy="${pt.y}" r="3" class="chart-point" data-tooltip="${pt.ping}ms">
+                        <title>${pt.ping}ms</title>
+                    </circle>
+                `).join('')}
+            </svg>
+        `;
+    };
 
     const renderUptimeCharts = (services) => {
         if (!uptimeContainer || !Array.isArray(services)) return;
 
-        uptimeContainer.innerHTML = services.map(s => {
+        uptimeContainer.innerHTML = services.map((s, idx) => {
             const isOnline = s.status === 'online';
             const history = Array.isArray(s.history) && s.history.length > 0
                 ? s.history
-                : Array(20).fill({ status: isOnline ? 'up' : 'down', ping: 15 });
+                : [
+                    { ping: 12, status: 'up' }, { ping: 18, status: 'up' },
+                    { ping: 14, status: 'up' }, { ping: 25, status: 'up' },
+                    { ping: 16, status: 'up' }, { ping: 11, status: 'up' },
+                    { ping: 20, status: 'up' }, { ping: 13, status: 'up' }
+                  ];
 
-            // Generate 20 heartbeat bars
-            const barsHtml = history.map(h => {
-                const barClass = h.status === 'up' ? 'hb-bar' : 'hb-bar down';
-                return `<div class="${barClass}" title="Latency: ${h.ping}ms (${h.status})"></div>`;
-            }).join('');
+            const chartSvg = generateLatencyChartSvg(history, idx);
 
             return `
                 <div class="service-chart-card">
                     <div class="service-chart-top">
-                        <span class="service-chart-name">${escapeHtml(s.name)}</span>
+                        <div class="service-chart-title">
+                            <span class="service-dot ${isOnline ? 'online' : 'offline'}"></span>
+                            <span class="service-chart-name">${escapeHtml(s.name)}</span>
+                        </div>
                         <span class="service-chart-ping">${escapeHtml(s.avgPing || s.ping || 'OK')}</span>
                     </div>
-                    <div class="heartbeat-bar-row">
-                        ${barsHtml}
+                    
+                    <!-- LATENCY SPARKLINE CHART (GRAFIK NAIK TURUN) -->
+                    <div class="chart-svg-container">
+                        ${chartSvg}
                     </div>
+
                     <div class="chart-meta-row">
                         <span>24h Uptime: ${escapeHtml(s.uptime24h || '100%')}</span>
-                        <span>STATUS: ${isOnline ? 'ONLINE 🟢' : 'OFFLINE 🔴'}</span>
+                        <span>LATENCY GRAPH</span>
                     </div>
                 </div>
             `;

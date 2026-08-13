@@ -4,8 +4,8 @@
 
 :root {
     --bg-dark: #050505;
-    --card-bg: #0d0d0d;
-    --card-border: #222222;
+    --card-bg: #0f0f0f;
+    --card-border: #262626;
     --card-border-hover: #ffffff;
     
     --text-primary: #ffffff;
@@ -378,14 +378,37 @@ body {
 .service-chart-card {
     background: #000000;
     border: 1px solid var(--card-border);
-    padding: 0.75rem 0.9rem;
+    padding: 0.85rem;
+    border-radius: 0.4rem;
 }
 
 .service-chart-top {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.6rem;
+}
+
+.service-chart-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.service-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+}
+
+.service-dot.online {
+    background-color: var(--status-green);
+    box-shadow: 0 0 6px var(--status-green);
+}
+
+.service-dot.offline {
+    background-color: var(--status-red);
+    box-shadow: 0 0 6px var(--status-red);
 }
 
 .service-chart-name {
@@ -397,34 +420,40 @@ body {
 
 .service-chart-ping {
     font-family: var(--font-mono);
-    font-size: 0.72rem;
+    font-size: 0.75rem;
+    font-weight: 700;
     color: var(--accent);
 }
 
-/* 20-BAR HEARTBEAT HISTORY VISUALIZER */
-.heartbeat-bar-row {
-    display: flex;
-    align-items: center;
-    gap: 3px;
-    height: 18px;
+/* SVG LATENCY SPARKLINE (GRAFIK NAIK TURUN) */
+.chart-svg-container {
+    width: 100%;
+    height: 48px;
+    margin: 0.4rem 0;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px dashed rgba(255, 255, 255, 0.08);
+    border-radius: 0.25rem;
+    padding: 2px;
 }
 
-.hb-bar {
-    flex: 1;
+.latency-chart-svg {
+    width: 100%;
     height: 100%;
-    background-color: var(--status-green);
-    border-radius: 1px;
-    opacity: 0.85;
-    transition: opacity 0.2s ease, transform 0.2s ease;
+    display: block;
+    overflow: visible;
 }
 
-.hb-bar:hover {
-    opacity: 1;
-    transform: scaleY(1.2);
+.chart-point {
+    fill: var(--accent);
+    stroke: #000000;
+    stroke-width: 1px;
+    cursor: pointer;
+    transition: r 0.2s ease, fill 0.2s ease;
 }
 
-.hb-bar.down {
-    background-color: var(--status-red);
+.chart-point:hover {
+    r: 5px;
+    fill: #ffffff;
 }
 
 .chart-meta-row {
@@ -457,7 +486,6 @@ body {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-
 }
 
 .sec-num {
