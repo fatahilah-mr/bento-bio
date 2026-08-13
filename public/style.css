@@ -1,18 +1,20 @@
 /* ===================================================================
-   NEO-BRUTALIST HIGH CONTRAST EDITORIAL DESIGN SYSTEM (FATAH.WEB.ID)
+   VIBRANT POP NEO-BRUTALISM LIGHT THEME (FATAH.WEB.ID)
    =================================================================== */
 
 :root {
-    --bg-dark: #08090d;
-    --card-bg: #11131a;
-    --card-bg-hover: #161922;
-    --border-thick: 3px solid #1e293b;
-    --border-accent: 3px solid #6366f1;
+    --bg-dark: #f8f5ee;               /* Warm Cream / Vanilla Milk */
+    --card-bg: #ffffff;               /* Crisp Pure White */
+    --card-bg-hover: #fffbeb;         /* Soft Cream Glow */
+    --border-thick: 3px solid #000000;/* Pitch Black 3px Border */
+    --border-accent: 3px solid #000000;
     
-    --text-main: #ffffff;
-    --text-muted: #94a3b8;
-    --text-dim: #64748b;
+    --text-main: #000000;             /* Pitch Black High Contrast */
+    --text-muted: #334155;           /* Slate Charcoal Body */
+    --text-dim: #64748b;             /* Code / Dim Labels */
     
+    /* Vibrant Pop Accent Colors */
+    --accent-yellow: #fbbf24;
     --accent-indigo: #6366f1;
     --accent-emerald: #10b981;
     --accent-amber: #f59e0b;
@@ -22,6 +24,7 @@
     --accent-pink: #ec4899;
     
     --shadow-brutal: 6px 6px 0px #000000;
+    --shadow-brutal-hover: 8px 8px 0px #000000;
     --shadow-brutal-indigo: 6px 6px 0px #6366f1;
     
     --font-heading: 'Space Grotesk', -apple-system, sans-serif;
@@ -46,13 +49,13 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
-/* NEO-BRUTALIST GRID BACKGROUND */
+/* BRIGHT NEO-BRUTALIST GRID BACKGROUND */
 .neo-grid-bg {
     position: fixed;
     inset: 0;
     background-image: 
-        linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+        linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
     background-size: 32px 32px;
     pointer-events: none;
     z-index: 0;
@@ -73,7 +76,7 @@ body {
     flex-direction: column;
     gap: 1rem;
     padding: 1.15rem 1.25rem;
-    background: var(--card-bg);
+    background: #fef08a;              /* Bright Pop Yellow Accent */
     border: var(--border-thick);
     box-shadow: var(--shadow-brutal);
     margin-bottom: 1.5rem;
@@ -101,9 +104,9 @@ body {
 .brand-code {
     font-family: var(--font-mono);
     font-size: 0.8rem;
-    font-weight: 700;
-    color: #000000;
-    background: var(--accent-indigo);
+    font-weight: 800;
+    color: #ffffff;
+    background: #000000;
     padding: 0.25rem 0.65rem;
     border: 2px solid #000000;
     flex-shrink: 0;
@@ -112,7 +115,8 @@ body {
 .brand-title {
     font-family: var(--font-heading);
     font-weight: 900;
-    font-size: 1.25rem;
+    font-size: 1.35rem;
+    color: #000000;
     letter-spacing: -0.02em;
     white-space: nowrap;
     overflow: hidden;
@@ -130,18 +134,19 @@ body {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    background: rgba(16, 185, 129, 0.12);
-    border: 2px solid rgba(16, 185, 129, 0.3);
+    background: #ffffff;
+    border: 2px solid #000000;
     padding: 0.4rem 0.75rem;
     font-family: var(--font-mono);
     font-size: 0.72rem;
-    font-weight: 700;
-    color: #34d399;
+    font-weight: 800;
+    color: #000000;
+    box-shadow: 3px 3px 0px #000000;
 }
 
 .live-pulse {
-    width: 8px;
-    height: 8px;
+    width: 9px;
+    height: 9px;
     border-radius: 50%;
     background-color: var(--accent-emerald);
     box-shadow: 0 0 10px var(--accent-emerald);
@@ -168,13 +173,14 @@ body {
 .ai-trigger-btn:hover {
     transform: translate(-2px, -2px);
     box-shadow: 6px 6px 0px #000000;
+    background: #4f46e5;
 }
 
 /* BENTO GRID SYSTEM */
 .bento-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 1.25rem;
+    gap: 1.35rem;
     width: 100%;
     min-width: 0;
 }
@@ -193,7 +199,7 @@ body {
     background: var(--card-bg);
     border: var(--border-thick);
     box-shadow: var(--shadow-brutal);
-    padding: 1.25rem;
+    padding: 1.35rem;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -207,15 +213,14 @@ body {
 
 @media (min-width: 640px) {
     .bento-card {
-        padding: 1.65rem;
+        padding: 1.75rem;
     }
 }
 
 .bento-card:hover {
     background: var(--card-bg-hover);
-    border-color: var(--accent-indigo);
     transform: translate(-2px, -2px);
-    box-shadow: 8px 8px 0px #000000;
+    box-shadow: var(--shadow-brutal-hover);
 }
 
 .bento-card.hidden-card {
@@ -224,14 +229,23 @@ body {
 
 .card-tag-num {
     font-family: var(--font-mono);
-    font-size: 0.75rem;
+    font-size: 0.78rem;
     font-weight: 800;
-    color: var(--accent-indigo);
+    color: #000000;
+    background: #e0e7ff;
+    border: 2px solid #000000;
+    padding: 0.2rem 0.55rem;
+    display: inline-block;
+    width: fit-content;
     letter-spacing: 0.05em;
-    margin-bottom: 1rem;
+    margin-bottom: 1.15rem;
 }
 
 /* HERO CARD */
+.card-hero {
+    background: #ffffff;
+}
+
 .hero-top {
     display: flex;
     flex-direction: column;
@@ -247,15 +261,15 @@ body {
 }
 
 .avatar-block {
-    width: 70px;
-    height: 70px;
+    width: 76px;
+    height: 76px;
     background: var(--accent-indigo);
     border: 3px solid #000000;
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: var(--font-heading);
-    font-size: 2.75rem;
+    font-size: 2.85rem;
     font-weight: 900;
     color: #ffffff;
     box-shadow: 4px 4px 0px #000000;
@@ -270,55 +284,57 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 0.55rem;
-    background: rgba(245, 158, 11, 0.15);
-    border: 2px solid rgba(245, 158, 11, 0.4);
-    color: #fcd34d;
+    background: #fef08a;
+    border: 2px solid #000000;
+    color: #000000;
     font-family: var(--font-mono);
     font-size: 0.75rem;
     font-weight: 800;
     padding: 0.35rem 0.75rem;
     margin-bottom: 0.75rem;
+    box-shadow: 3px 3px 0px #000000;
     max-width: 100%;
     word-break: break-word;
 }
 
 .profile-name {
     font-family: var(--font-heading);
-    font-size: 2.2rem;
+    font-size: 2.35rem;
     font-weight: 900;
     letter-spacing: -0.03em;
-    color: #ffffff;
+    color: #000000;
     word-break: break-word;
 }
 
 @media (min-width: 640px) {
     .profile-name {
-        font-size: 2.5rem;
+        font-size: 2.75rem;
     }
 }
 
 .profile-title {
     font-family: var(--font-heading);
-    font-size: 1rem;
-    font-weight: 700;
+    font-size: 1.05rem;
+    font-weight: 800;
     color: var(--accent-indigo);
-    margin-top: 0.2rem;
+    margin-top: 0.25rem;
 }
 
 .profile-bio {
-    font-size: 0.9rem;
+    font-size: 0.92rem;
     color: var(--text-muted);
-    line-height: 1.55;
+    line-height: 1.6;
     margin-top: 0.6rem;
+    font-weight: 500;
 }
 
 .hero-bottom {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    margin-top: 1.5rem;
-    padding-top: 1.15rem;
-    border-top: 2px dashed rgba(255, 255, 255, 0.1);
+    margin-top: 1.65rem;
+    padding-top: 1.25rem;
+    border-top: 2px dashed #cbd5e1;
     min-width: 0;
 }
 
@@ -333,6 +349,7 @@ body {
 .location-tag {
     font-family: var(--font-mono);
     font-size: 0.78rem;
+    font-weight: 700;
     color: var(--text-muted);
     display: flex;
     align-items: center;
@@ -349,47 +366,53 @@ body {
     font-family: var(--font-mono);
     font-size: 0.72rem;
     font-weight: 800;
-    color: #ffffff;
-    background: #000000;
-    border: 2px solid var(--text-dim);
-    padding: 0.4rem 0.65rem;
+    color: #000000;
+    background: #ffffff;
+    border: 2px solid #000000;
+    padding: 0.4rem 0.7rem;
     text-decoration: none;
     transition: all 0.15s ease;
+    box-shadow: 3px 3px 0px #000000;
 }
 
 .neo-btn:hover {
     background: var(--accent-indigo);
-    border-color: #000000;
     color: #ffffff;
-    box-shadow: 3px 3px 0px #000000;
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0px #000000;
 }
 
 /* CLOCK & METRICS CARD */
+.card-clock-metrics {
+    background: #f1f5f9;
+}
+
 .clock-box {
     margin-bottom: 1.15rem;
 }
 
 .clock-time-text {
     font-family: var(--font-mono);
-    font-size: 2.15rem;
+    font-size: 2.35rem;
     font-weight: 900;
-    color: var(--accent-emerald);
+    color: #000000;
     letter-spacing: -0.03em;
 }
 
 .clock-sub {
     font-family: var(--font-mono);
     font-size: 0.75rem;
-    color: var(--text-muted);
-    font-weight: 700;
+    color: var(--accent-indigo);
+    font-weight: 800;
     margin-top: 0.2rem;
 }
 
 .clock-date-text {
     font-family: var(--font-mono);
     font-size: 0.78rem;
-    color: var(--text-dim);
+    color: var(--text-muted);
     margin-top: 0.5rem;
+    font-weight: 600;
 }
 
 .resource-gauges {
@@ -409,14 +432,15 @@ body {
     justify-content: space-between;
     font-family: var(--font-mono);
     font-size: 0.72rem;
+    font-weight: 700;
     color: var(--text-muted);
 }
 
 .gauge-bar-track {
     width: 100%;
-    height: 8px;
-    background: #000000;
-    border: 1px solid var(--text-dim);
+    height: 10px;
+    background: #ffffff;
+    border: 2px solid #000000;
     overflow: hidden;
 }
 
@@ -431,6 +455,7 @@ body {
 
 /* LIVE RADAR & SPEEDOMETER GAUGES */
 .card-radar {
+    background: #ffffff;
     width: 100%;
     min-width: 0;
     box-sizing: border-box;
@@ -455,9 +480,9 @@ body {
 
 .radar-title {
     font-family: var(--font-heading);
-    font-size: 1.25rem;
+    font-size: 1.35rem;
     font-weight: 900;
-    color: #ffffff;
+    color: #000000;
 }
 
 .radar-live-badge {
@@ -465,13 +490,14 @@ body {
     align-items: center;
     gap: 0.5rem;
     font-family: var(--font-mono);
-    font-size: 0.72rem;
+    font-size: 0.75rem;
+    font-weight: 700;
     color: var(--text-muted);
 }
 
 .pulse-emerald {
-    width: 8px;
-    height: 8px;
+    width: 9px;
+    height: 9px;
     border-radius: 50%;
     background-color: var(--accent-emerald);
     box-shadow: 0 0 8px var(--accent-emerald);
@@ -501,22 +527,25 @@ body {
 }
 
 .gauge-card {
-    background: #000000;
-    border: 2px solid var(--text-dim);
-    padding: 0.85rem;
+    background: #f8fafc;
+    border: 2px solid #000000;
+    padding: 0.9rem;
     display: flex;
     flex-direction: column;
     gap: 0.65rem;
     position: relative;
-    transition: border-color 0.2s ease;
+    transition: border-color 0.2s ease, transform 0.2s ease;
     width: 100%;
     min-width: 0;
     box-sizing: border-box;
     overflow: hidden;
+    box-shadow: 4px 4px 0px #000000;
 }
 
 .gauge-card:hover {
-    border-color: var(--accent-emerald);
+    border-color: var(--accent-indigo);
+    transform: translateY(-2px);
+    box-shadow: 6px 6px 0px #000000;
 }
 
 .gauge-card-header {
@@ -535,9 +564,9 @@ body {
 
 .gauge-name {
     font-family: var(--font-heading);
-    font-size: 0.86rem;
+    font-size: 0.88rem;
     font-weight: 800;
-    color: #ffffff;
+    color: #000000;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -545,9 +574,12 @@ body {
 
 .gauge-ping-val {
     font-family: var(--font-mono);
-    font-size: 0.75rem;
+    font-size: 0.78rem;
     font-weight: 800;
-    color: var(--accent-emerald);
+    color: #000000;
+    background: #a7f3d0;
+    padding: 0.15rem 0.45rem;
+    border: 1px solid #000000;
     flex-shrink: 0;
 }
 
@@ -585,12 +617,14 @@ body {
     display: flex;
     justify-content: space-between;
     font-family: var(--font-mono);
-    font-size: 0.68rem;
-    color: var(--text-dim);
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--text-muted);
 }
 
 /* SECTION HEADER & FILTERS */
 .card-section-header {
+    background: #ffffff;
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -610,9 +644,9 @@ body {
 
 .sec-title-group h2 {
     font-family: var(--font-heading);
-    font-size: 1.25rem;
+    font-size: 1.35rem;
     font-weight: 900;
-    color: #ffffff;
+    color: #000000;
 }
 
 .neo-filter-pills {
@@ -622,26 +656,28 @@ body {
 }
 
 .filter-btn {
-    background: #000000;
-    border: 2px solid var(--text-dim);
-    color: var(--text-muted);
+    background: #ffffff;
+    border: 2px solid #000000;
+    color: #000000;
     font-family: var(--font-mono);
-    font-size: 0.72rem;
+    font-size: 0.75rem;
     font-weight: 800;
-    padding: 0.4rem 0.75rem;
+    padding: 0.45rem 0.85rem;
     cursor: pointer;
     transition: all 0.15s ease;
+    box-shadow: 3px 3px 0px #000000;
 }
 
 .filter-btn.active, .filter-btn:hover {
     background: var(--accent-indigo);
     color: #ffffff;
-    border-color: #000000;
-    box-shadow: 3px 3px 0px #000000;
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0px #000000;
 }
 
 /* PROJECT CARDS */
 .card-project {
+    background: #ffffff;
     cursor: pointer;
     min-height: 190px;
     width: 100%;
@@ -658,31 +694,32 @@ body {
 .neo-badge {
     font-family: var(--font-mono);
     font-size: 0.72rem;
-    font-weight: 700;
+    font-weight: 800;
     padding: 0.25rem 0.6rem;
-    border: 1px solid #000000;
+    border: 2px solid #000000;
+    box-shadow: 2px 2px 0px #000000;
 }
 
-.bg-indigo { background: var(--accent-indigo); color: #ffffff; }
-.bg-emerald { background: var(--accent-emerald); color: #000000; }
-.bg-amber { background: var(--accent-amber); color: #000000; }
-.bg-rose { background: var(--accent-rose); color: #ffffff; }
-.bg-pink { background: var(--accent-pink); color: #ffffff; }
-.bg-purple { background: var(--accent-purple); color: #ffffff; }
-.bg-cyan { background: var(--accent-cyan); color: #000000; }
+.bg-indigo { background: #e0e7ff; color: #000000; }
+.bg-emerald { background: #a7f3d0; color: #000000; }
+.bg-amber { background: #fef08a; color: #000000; }
+.bg-rose { background: #fecdd3; color: #000000; }
+.bg-pink { background: #fbcfe8; color: #000000; }
+.bg-purple { background: #ddd6fe; color: #000000; }
+.bg-cyan { background: #cffafe; color: #000000; }
 
 .proj-num {
     font-family: var(--font-mono);
-    font-size: 0.75rem;
-    font-weight: 800;
-    color: var(--text-dim);
+    font-size: 0.78rem;
+    font-weight: 900;
+    color: #000000;
 }
 
 .proj-title {
     font-family: var(--font-heading);
-    font-size: 1.3rem;
+    font-size: 1.35rem;
     font-weight: 900;
-    color: #ffffff;
+    color: #000000;
     margin-bottom: 0.4rem;
 }
 
@@ -691,12 +728,13 @@ body {
     color: var(--text-muted);
     line-height: 1.55;
     margin-bottom: 1.25rem;
+    font-weight: 500;
 }
 
 .proj-action-bar {
     margin-top: auto;
     padding-top: 0.85rem;
-    border-top: 2px dashed rgba(255, 255, 255, 0.1);
+    border-top: 2px dashed #cbd5e1;
     font-family: var(--font-mono);
     font-size: 0.78rem;
     font-weight: 800;
@@ -704,15 +742,19 @@ body {
 }
 
 .card-project:hover .proj-action-bar {
-    color: #ffffff;
+    color: #000000;
 }
 
 /* TECH MATRIX */
+.card-tech-matrix {
+    background: #ffffff;
+}
+
 .tech-matrix-heading {
     font-family: var(--font-heading);
-    font-size: 1.15rem;
+    font-size: 1.2rem;
     font-weight: 900;
-    color: #ffffff;
+    color: #000000;
     margin-bottom: 1.15rem;
 }
 
@@ -729,21 +771,23 @@ body {
 }
 
 .tech-box {
-    background: #000000;
-    border: 2px solid var(--text-dim);
+    background: #f8fafc;
+    border: 2px solid #000000;
     padding: 0.65rem 0.75rem;
     font-family: var(--font-mono);
     font-size: 0.78rem;
-    font-weight: 700;
-    color: var(--text-muted);
+    font-weight: 800;
+    color: #000000;
     text-align: center;
     transition: all 0.15s ease;
+    box-shadow: 3px 3px 0px #000000;
 }
 
 .tech-box:hover {
-    border-color: var(--accent-indigo);
+    background: var(--accent-indigo);
     color: #ffffff;
-    box-shadow: 3px 3px 0px #000000;
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0px #000000;
 }
 
 /* FLOATING AI ASSISTANT CHAT DRAWER */
@@ -753,9 +797,9 @@ body {
     right: 1rem;
     width: calc(100vw - 2rem);
     max-width: 380px;
-    height: 460px;
-    background: var(--card-bg);
-    border: 3px solid var(--accent-indigo);
+    height: 470px;
+    background: #ffffff;
+    border: 3px solid #000000;
     box-shadow: 8px 8px 0px #000000;
     z-index: 1000;
     display: flex;
@@ -775,8 +819,8 @@ body {
     align-items: center;
     justify-content: space-between;
     padding: 0.85rem 1.15rem;
-    background: #000000;
-    border-bottom: 2px solid var(--accent-indigo);
+    background: #fef08a;
+    border-bottom: 3px solid #000000;
 }
 
 .chat-bot-brand {
@@ -787,33 +831,36 @@ body {
 
 .chat-bot-brand i {
     font-size: 1.35rem;
+    color: #000000;
 }
 
 .chat-bot-title {
     font-family: var(--font-heading);
     font-size: 0.95rem;
-    font-weight: 800;
-    color: #ffffff;
+    font-weight: 900;
+    color: #000000;
     display: block;
 }
 
 .chat-bot-sub {
     font-family: var(--font-mono);
     font-size: 0.7rem;
-    color: var(--text-dim);
+    color: #334155;
+    font-weight: 700;
     display: block;
 }
 
 .chat-close-btn {
     background: transparent;
     border: none;
-    color: var(--text-muted);
+    color: #000000;
     font-size: 1.6rem;
+    font-weight: 900;
     cursor: pointer;
 }
 
 .chat-close-btn:hover {
-    color: #ffffff;
+    color: var(--accent-indigo);
 }
 
 .chat-messages-container {
@@ -823,46 +870,50 @@ body {
     display: flex;
     flex-direction: column;
     gap: 0.85rem;
-    background: rgba(0, 0, 0, 0.4);
+    background: #f8fafc;
 }
 
 .chat-msg {
     max-width: 88%;
     padding: 0.7rem 0.9rem;
     font-size: 0.85rem;
-    line-height: 1.5;
+    line-height: 1.55;
     word-break: break-word;
 }
 
 .chat-msg.bot {
-    background: #000000;
-    border: 2px solid var(--text-dim);
-    color: var(--text-main);
+    background: #ffffff;
+    border: 2px solid #000000;
+    color: #000000;
     align-self: flex-start;
+    box-shadow: 3px 3px 0px #000000;
 }
 
 .chat-msg.user {
     background: var(--accent-indigo);
     color: #ffffff;
     align-self: flex-end;
-    font-weight: 600;
+    font-weight: 700;
+    border: 2px solid #000000;
+    box-shadow: 3px 3px 0px #000000;
 }
 
 .chat-input-form {
     display: flex;
     padding: 0.65rem;
-    background: #000000;
-    border-top: 2px solid var(--text-dim);
+    background: #ffffff;
+    border-top: 3px solid #000000;
     gap: 0.5rem;
 }
 
 #chat-input {
     flex: 1;
-    background: var(--card-bg);
-    border: 2px solid var(--text-dim);
-    color: #ffffff;
+    background: #f8fafc;
+    border: 2px solid #000000;
+    color: #000000;
     font-family: var(--font-body);
     font-size: 0.85rem;
+    font-weight: 600;
     padding: 0.5rem 0.75rem;
     min-width: 0;
 }
@@ -880,6 +931,7 @@ body {
     cursor: pointer;
     font-size: 0.88rem;
     flex-shrink: 0;
+    box-shadow: 2px 2px 0px #000000;
 }
 
 .chat-send-btn:hover {
@@ -890,7 +942,8 @@ body {
 .modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.85);
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(4px);
     z-index: 999;
     display: flex;
     align-items: center;
@@ -907,9 +960,9 @@ body {
 }
 
 .neo-modal-card {
-    background: var(--card-bg);
-    border: 3px solid var(--accent-indigo);
-    box-shadow: 8px 8px 0px #000000;
+    background: #ffffff;
+    border: 3px solid #000000;
+    box-shadow: 10px 10px 0px #000000;
     width: 100%;
     max-width: 600px;
     padding: 1.75rem;
@@ -933,23 +986,29 @@ body {
     position: absolute;
     top: 1rem;
     right: 1.25rem;
-    background: #000000;
-    border: 2px solid var(--text-dim);
-    color: #ffffff;
+    background: #fef08a;
+    border: 2px solid #000000;
+    color: #000000;
     width: 36px;
     height: 36px;
     font-size: 1.35rem;
+    font-weight: 900;
     cursor: pointer;
+    box-shadow: 2px 2px 0px #000000;
 }
 
 .neo-modal-close:hover {
-    background: var(--accent-indigo);
+    background: var(--accent-rose);
+    color: #ffffff;
 }
 
 .neo-modal-badge {
     font-family: var(--font-mono);
     font-size: 0.78rem;
-    color: var(--accent-indigo);
+    color: #000000;
+    background: #e0e7ff;
+    border: 2px solid #000000;
+    padding: 0.2rem 0.55rem;
     font-weight: 800;
 }
 
@@ -957,16 +1016,17 @@ body {
     font-family: var(--font-heading);
     font-size: 1.75rem;
     font-weight: 900;
-    color: #ffffff;
-    margin-top: 0.2rem;
+    color: #000000;
+    margin-top: 0.5rem;
     margin-bottom: 1.15rem;
 }
 
 .neo-modal-body {
-    font-size: 0.9rem;
+    font-size: 0.92rem;
     color: var(--text-muted);
-    line-height: 1.6;
+    line-height: 1.65;
     margin-bottom: 1.65rem;
+    font-weight: 500;
 }
 
 .neo-modal-footer {
@@ -1000,14 +1060,16 @@ body {
 }
 
 .neo-modal-btn.secondary {
-    background: #000000;
-    color: #ffffff;
-    border: 2px solid var(--text-dim);
+    background: #ffffff;
+    color: #000000;
+    border: 2px solid #000000;
+    box-shadow: 4px 4px 0px #000000;
 }
 
 .neo-modal-btn.secondary:hover {
-    border-color: var(--accent-indigo);
-    color: var(--accent-indigo);
+    background: #fef08a;
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px #000000;
 }
 
 /* FOOTER */
@@ -1017,7 +1079,8 @@ body {
     padding-bottom: 1.5rem;
     font-family: var(--font-mono);
     font-size: 0.75rem;
-    color: var(--text-dim);
+    font-weight: 700;
+    color: var(--text-muted);
 }
 
 @keyframes pulse {

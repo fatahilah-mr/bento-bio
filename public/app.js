@@ -55,17 +55,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // 3. SVG SPEEDOMETER DIAL GENERATOR
     const generateSpeedometerSvg = (pingMs) => {
         const numericPing = typeof pingMs === 'number' ? pingMs : parseInt(pingMs) || 15;
-        // Map 0-5000ms to 0-100% dial angle
         const percentage = Math.min(100, Math.max(5, (numericPing / 2000) * 100));
-        const strokeDash = (percentage / 100) * 126; // 126 is circumference of r=20 semi-circle
+        const strokeDash = (percentage / 100) * 126;
 
         const color = numericPing < 100 ? '#10b981' : numericPing < 1000 ? '#f59e0b' : '#f43f5e';
 
         return `
             <svg class="speedometer-svg" viewBox="0 0 60 60">
-                <circle cx="30" cy="30" r="22" fill="none" stroke="#1e293b" stroke-width="6" stroke-dasharray="138" stroke-dashoffset="35" stroke-linecap="round" />
+                <circle cx="30" cy="30" r="22" fill="none" stroke="#e2e8f0" stroke-width="6" stroke-dasharray="138" stroke-dashoffset="35" stroke-linecap="round" />
                 <circle cx="30" cy="30" r="22" fill="none" stroke="${color}" stroke-width="6" stroke-dasharray="${strokeDash} 138" stroke-linecap="round" />
-                <text x="30" y="32" font-family="JetBrains Mono" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">${numericPing}ms</text>
+                <text x="30" y="32" font-family="JetBrains Mono" font-size="9" font-weight="bold" fill="#000000" text-anchor="middle">${numericPing}ms</text>
             </svg>
         `;
     };
@@ -86,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="gauge-card">
                     <div class="gauge-card-header">
                         <div class="gauge-title-group">
-                            <span class="live-pulse" style="background-color: ${isOnline ? '#10b981' : '#f43f5e'};"></span>
+                            <span class="pulse-emerald" style="background-color: ${isOnline ? '#10b981' : '#f43f5e'};"></span>
                             <span class="gauge-name">${escapeHtml(s.name)}</span>
                         </div>
                         <span class="gauge-ping-val">${escapeHtml(s.ping || 'OK')}</span>
@@ -100,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
 
                     <div class="gauge-card-footer">
-                        <span>24h: ${escapeHtml(s.uptime24h || '99.9%')}</span>
+                        <span>24h Uptime: ${escapeHtml(s.uptime24h || '99.9%')}</span>
                         <span>AVG: ${escapeHtml(s.avgPing || 'OK')}</span>
                     </div>
                 </div>
@@ -129,8 +128,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const strokeColor = s.status === 'online' ? '#10b981' : '#f43f5e';
             const gradient = ctx.createLinearGradient(0, 0, 0, 50);
-            gradient.addColorStop(0, s.status === 'online' ? 'rgba(16, 185, 129, 0.45)' : 'rgba(244, 63, 94, 0.45)');
-            gradient.addColorStop(1, 'rgba(0, 0, 0, 0.0)');
+            gradient.addColorStop(0, s.status === 'online' ? 'rgba(16, 185, 129, 0.35)' : 'rgba(244, 63, 94, 0.35)');
+            gradient.addColorStop(1, 'rgba(255, 255, 255, 0.0)');
 
             chartInstances[canvasId] = new Chart(ctx, {
                 type: 'line',
@@ -140,12 +139,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         label: 'Latency (ms)',
                         data: pings,
                         borderColor: strokeColor,
-                        borderWidth: 2,
+                        borderWidth: 2.2,
                         fill: true,
                         backgroundColor: gradient,
                         tension: 0.45,
                         pointRadius: 0,
-                        pointHoverRadius: 4
+                        pointHoverRadius: 5
                     }]
                 },
                 options: {
@@ -159,7 +158,10 @@ document.addEventListener('DOMContentLoaded', () => {
                                 label: (ctx) => `Ping: ${ctx.parsed.y} ms`
                             },
                             backgroundColor: '#000000',
-                            bodyFont: { family: 'JetBrains Mono', size: 11 }
+                            titleFont: { family: 'Space Grotesk', size: 11, weight: 'bold' },
+                            bodyFont: { family: 'JetBrains Mono', size: 12 },
+                            padding: 8,
+                            cornerRadius: 6
                         }
                     },
                     scales: {
@@ -192,7 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     fetchUptimeData();
-    setInterval(fetchUptimeData, 90000); // Refresh every 90s as requested
+    setInterval(fetchUptimeData, 90000); // Refresh every 90s
 
     // 5. BUILT-IN AI ASSISTANT CHAT DRAWER LOGIC
     const aiDrawer = document.getElementById('ai-chat-drawer');
@@ -216,7 +218,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Interactive AI Response Generator
     const getAiResponse = (query) => {
         const q = query.toLowerCase();
 
@@ -239,7 +240,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const text = chatInput.value.trim();
             if (!text) return;
 
-            // Render User Message
             const userMsgElem = document.createElement('div');
             userMsgElem.className = 'chat-msg user';
             userMsgElem.textContent = text;
@@ -248,7 +248,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             chatMessages.scrollTop = chatMessages.scrollHeight;
 
-            // Render Bot Response with typing delay
             setTimeout(() => {
                 const botMsgElem = document.createElement('div');
                 botMsgElem.className = 'chat-msg bot';
