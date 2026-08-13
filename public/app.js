@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
     
-    // Store Chart.js instances to destroy/update properly
     const chartInstances = {};
 
     // 1. INTERACTIVE CATEGORY FILTERS
@@ -24,13 +23,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 2. CHART.JS SMOOTH AREA CURVE RENDERER FOR UPTIME KUMA MONITORS
+    // 2. CHART.JS SMOOTH AREA CURVE RENDERER FOR UPTIME MONITORS
     const monitorsContainer = document.getElementById('monitors-container');
 
     const renderMonitorCharts = (services) => {
         if (!monitorsContainer || !Array.isArray(services)) return;
 
-        // Render Monitor HTML Cards
         monitorsContainer.innerHTML = services.map((s, idx) => {
             const isOnline = s.status === 'online';
             const canvasId = `chart-canvas-${idx}`;
@@ -45,14 +43,14 @@ document.addEventListener('DOMContentLoaded', () => {
                         <span class="monitor-ping-badge">${escapeHtml(s.avgPing || s.ping || 'OK')}</span>
                     </div>
 
-                    <!-- CHART.JS SMOOTH AREA CURVE CANVAS -->
+                    <!-- CHART.JS SMOOTH DYNAMIC WAVE LATENCY CANVAS -->
                     <div class="chart-canvas-wrapper">
                         <canvas id="${canvasId}"></canvas>
                     </div>
 
                     <div class="chart-card-footer">
                         <span>24h Uptime: ${escapeHtml(s.uptime24h || '100%')}</span>
-                        <span>LIVE STREAM</span>
+                        <span>LATENCY WAVE</span>
                     </div>
                 </div>
             `;
@@ -64,7 +62,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const ctx = document.getElementById(canvasId)?.getContext('2d');
             if (!ctx) return;
 
-            // Destroy previous chart instance if exists
             if (chartInstances[canvasId]) {
                 chartInstances[canvasId].destroy();
             }
@@ -72,20 +69,22 @@ document.addEventListener('DOMContentLoaded', () => {
             const history = Array.isArray(s.history) && s.history.length > 0
                 ? s.history
                 : [
-                    { ping: 12 }, { ping: 18 }, { ping: 14 }, { ping: 25 },
-                    { ping: 16 }, { ping: 11 }, { ping: 20 }, { ping: 13 },
-                    { ping: 19 }, { ping: 15 }
+                    { ping: 12 }, { ping: 24 }, { ping: 14 }, { ping: 32 },
+                    { ping: 16 }, { ping: 28 }, { ping: 10 }, { ping: 22 },
+                    { ping: 18 }, { ping: 30 }, { ping: 15 }, { ping: 26 }
                   ];
 
-            const pings = history.map(h => typeof h.ping === 'number' ? h.ping : 10);
-            const labels = pings.map((_, i) => `-${(pings.length - i) * 10}s`);
+            const pings = history.map(h => typeof h.ping === 'number' ? h.ping : 15);
+            const labels = pings.map((_, i) => `-${(pings.length - i)}s`);
 
-            // Create Gradient
+            const minVal = Math.max(0, Math.min(...pings) - 4);
+            const maxVal = Math.max(...pings) + 6;
+
+            // Create Gradient Fill under the line graph
             const gradient = ctx.createLinearGradient(0, 0, 0, 70);
-            gradient.addColorStop(0, 'rgba(16, 185, 129, 0.4)');
-            gradient.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
+            gradient.addColorStop(0, 'rgba(16, 185, 129, 0.45)');
+            gradient.addColorStop(1, 'rgba(16, 185, 129, 0.02)');
 
-            // Create Chart.js Line Chart with Bezier Curve (tension: 0.4)
             chartInstances[canvasId] = new Chart(ctx, {
                 type: 'line',
                 data: {
@@ -94,40 +93,46 @@ document.addEventListener('DOMContentLoaded', () => {
                         label: 'Latency (ms)',
                         data: pings,
                         borderColor: '#10b981',
-                        borderWidth: 2,
+                        borderWidth: 2.5,
                         fill: true,
                         backgroundColor: gradient,
-                        tension: 0.4, // Smooth Bezier Curve
+                        tension: 0.45, // Smooth Bezier Curve (Naik-Turun Mulus)
                         pointBackgroundColor: '#10b981',
                         pointBorderColor: '#07090e',
-                        pointRadius: 2.5,
-                        pointHoverRadius: 5
+                        pointBorderWidth: 1.5,
+                        pointRadius: 3,
+                        pointHoverRadius: 6,
+                        pointHoverBackgroundColor: '#ffffff'
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    animation: {
+                        duration: 800,
+                        easing: 'easeOutQuart'
+                    },
                     plugins: {
                         legend: { display: false },
                         tooltip: {
                             callbacks: {
-                                label: (context) => `${context.parsed.y} ms`
+                                label: (context) => `Latency: ${context.parsed.y} ms`
                             },
-                            backgroundColor: 'rgba(15, 23, 42, 0.9)',
-                            titleFont: { family: 'Plus Jakarta Sans', size: 11 },
+                            backgroundColor: 'rgba(7, 9, 14, 0.95)',
+                            titleFont: { family: 'Plus Jakarta Sans', size: 11, weight: 'bold' },
                             bodyFont: { family: 'JetBrains Mono', size: 12 },
-                            padding: 8,
+                            padding: 10,
+                            borderColor: 'rgba(16, 185, 129, 0.4)',
+                            borderWidth: 1,
                             cornerRadius: 8
                         }
                     },
                     scales: {
-                        x: {
-                            display: false
-                        },
+                        x: { display: false },
                         y: {
                             display: false,
-                            suggestedMin: Math.min(...pings) - 2,
-                            suggestedMax: Math.max(...pings) + 5
+                            min: minVal,
+                            max: maxVal
                         }
                     }
                 }
