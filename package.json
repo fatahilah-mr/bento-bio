@@ -1,0 +1,13 @@
+{
+  "name": "bento-bio-page",
+  "version": "1.0.0",
+  "description": "Bento Box Bio Page for bio.fatah.web.id",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
