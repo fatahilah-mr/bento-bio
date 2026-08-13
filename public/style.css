@@ -396,12 +396,12 @@ body {
 
 .neo-btn {
     font-family: var(--font-mono);
-    font-size: 0.72rem;
+    font-size: 0.75rem;
     font-weight: 800;
-    color: #000000;
+    color: #000000 !important;
     background: #ffffff;
     border: 2px solid #000000;
-    padding: 0.4rem 0.7rem;
+    padding: 0.45rem 0.75rem;
     text-decoration: none;
     transition: all 0.15s ease;
     box-shadow: 3px 3px 0px #000000;
@@ -409,7 +409,7 @@ body {
 
 .neo-btn:hover {
     background: var(--accent-indigo);
-    color: #ffffff;
+    color: #ffffff !important;
     transform: translate(-2px, -2px);
     box-shadow: 4px 4px 0px #000000;
 }
@@ -763,19 +763,7 @@ body {
     font-weight: 500;
 }
 
-.proj-action-bar {
-    margin-top: auto;
-    padding-top: 0.85rem;
-    border-top: 2px dashed #cbd5e1;
-    font-family: var(--font-mono);
-    font-size: 0.78rem;
-    font-weight: 800;
-    color: var(--accent-indigo);
-}
 
-.card-project:hover .proj-action-bar {
-    color: #000000;
-}
 
 /* TECH MATRIX */
 .card-tech-matrix {
