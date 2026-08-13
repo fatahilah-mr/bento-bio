@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 2. CHART.JS SMOOTH AREA CURVE RENDERER FOR UPTIME MONITORS
+    // 2. CHART.JS REAL-TIME SMOOTH AREA CURVE RENDERER FOR ALL UPTIME KUMA MONITORS
     const monitorsContainer = document.getElementById('monitors-container');
 
     const renderMonitorCharts = (services) => {
@@ -40,23 +40,23 @@ document.addEventListener('DOMContentLoaded', () => {
                             <span class="dot-status ${isOnline ? 'online' : 'offline'}"></span>
                             <span class="monitor-name">${escapeHtml(s.name)}</span>
                         </div>
-                        <span class="monitor-ping-badge">${escapeHtml(s.avgPing || s.ping || 'OK')}</span>
+                        <span class="monitor-ping-badge">${escapeHtml(s.ping || 'OK')}</span>
                     </div>
 
-                    <!-- CHART.JS SMOOTH DYNAMIC WAVE LATENCY CANVAS -->
+                    <!-- CHART.JS SMOOTH REAL-TIME LATENCY AREA CANVAS -->
                     <div class="chart-canvas-wrapper">
                         <canvas id="${canvasId}"></canvas>
                     </div>
 
                     <div class="chart-card-footer">
-                        <span>24h Uptime: ${escapeHtml(s.uptime24h || '100%')}</span>
-                        <span>LATENCY WAVE</span>
+                        <span>24h Uptime: ${escapeHtml(s.uptime24h || '99.9%')}</span>
+                        <span>AVG: ${escapeHtml(s.avgPing || 'OK')}</span>
                     </div>
                 </div>
             `;
         }).join('');
 
-        // Initialize Chart.js for each canvas
+        // Initialize Chart.js for each monitor canvas
         services.forEach((s, idx) => {
             const canvasId = `chart-canvas-${idx}`;
             const ctx = document.getElementById(canvasId)?.getContext('2d');
@@ -68,22 +68,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const history = Array.isArray(s.history) && s.history.length > 0
                 ? s.history
-                : [
-                    { ping: 12 }, { ping: 24 }, { ping: 14 }, { ping: 32 },
-                    { ping: 16 }, { ping: 28 }, { ping: 10 }, { ping: 22 },
-                    { ping: 18 }, { ping: 30 }, { ping: 15 }, { ping: 26 }
-                  ];
+                : [{ ping: 35 }, { ping: 45 }, { ping: 38 }, { ping: 92 }, { ping: 40 }];
 
-            const pings = history.map(h => typeof h.ping === 'number' ? h.ping : 15);
-            const labels = pings.map((_, i) => `-${(pings.length - i)}s`);
+            const pings = history.map(h => typeof h.ping === 'number' && h.ping > 0 ? h.ping : 10);
+            const labels = pings.map((_, i) => `-${pings.length - i}m`);
 
-            const minVal = Math.max(0, Math.min(...pings) - 4);
-            const maxVal = Math.max(...pings) + 6;
+            const minVal = Math.max(0, Math.min(...pings) * 0.85);
+            const maxVal = Math.max(...pings) * 1.15;
 
-            // Create Gradient Fill under the line graph
+            // Gradient Fill
             const gradient = ctx.createLinearGradient(0, 0, 0, 70);
-            gradient.addColorStop(0, 'rgba(16, 185, 129, 0.45)');
-            gradient.addColorStop(1, 'rgba(16, 185, 129, 0.02)');
+            gradient.addColorStop(0, s.status === 'online' ? 'rgba(16, 185, 129, 0.45)' : 'rgba(244, 63, 94, 0.45)');
+            gradient.addColorStop(1, 'rgba(0, 0, 0, 0.0)');
+
+            const strokeColor = s.status === 'online' ? '#10b981' : '#f43f5e';
 
             chartInstances[canvasId] = new Chart(ctx, {
                 type: 'line',
@@ -92,16 +90,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     datasets: [{
                         label: 'Latency (ms)',
                         data: pings,
-                        borderColor: '#10b981',
-                        borderWidth: 2.5,
+                        borderColor: strokeColor,
+                        borderWidth: 2.2,
                         fill: true,
                         backgroundColor: gradient,
-                        tension: 0.45, // Smooth Bezier Curve (Naik-Turun Mulus)
-                        pointBackgroundColor: '#10b981',
+                        tension: 0.4, // Smooth Bezier Curve
+                        pointBackgroundColor: strokeColor,
                         pointBorderColor: '#07090e',
                         pointBorderWidth: 1.5,
-                        pointRadius: 3,
-                        pointHoverRadius: 6,
+                        pointRadius: 2.5,
+                        pointHoverRadius: 5,
                         pointHoverBackgroundColor: '#ffffff'
                     }]
                 },
@@ -109,20 +107,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     responsive: true,
                     maintainAspectRatio: false,
                     animation: {
-                        duration: 800,
+                        duration: 600,
                         easing: 'easeOutQuart'
                     },
                     plugins: {
                         legend: { display: false },
                         tooltip: {
                             callbacks: {
-                                label: (context) => `Latency: ${context.parsed.y} ms`
+                                label: (context) => `Ping: ${context.parsed.y} ms`
                             },
                             backgroundColor: 'rgba(7, 9, 14, 0.95)',
                             titleFont: { family: 'Plus Jakarta Sans', size: 11, weight: 'bold' },
                             bodyFont: { family: 'JetBrains Mono', size: 12 },
                             padding: 10,
-                            borderColor: 'rgba(16, 185, 129, 0.4)',
+                            borderColor: strokeColor,
                             borderWidth: 1,
                             cornerRadius: 8
                         }
@@ -146,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return div.innerHTML;
     }
 
-    // 3. FETCH DATA FROM VERCEL SERVERLESS FUNCTION & UPTIME KUMA
+    // 3. FETCH REAL DATA FROM VERCEL SERVERLESS FUNCTION CONNECTED TO UPTIME KUMA SLUG 'MONITOR'
     const fetchUptimeData = async () => {
         try {
             const res = await fetch('/api/status-stream');
@@ -162,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     fetchUptimeData();
-    setInterval(fetchUptimeData, 10000);
+    setInterval(fetchUptimeData, 10000); // Poll every 10s for real-time updates
 
     // 4. APPLE-STYLE PROJECT DETAIL MODAL OVERLAY DATA DICTIONARY
     const projectDetails = {
