@@ -160,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     fetchUptimeData();
-    setInterval(fetchUptimeData, 10000); // Poll every 10s for real-time updates
+    setInterval(fetchUptimeData, 90000); // Poll every 90 seconds (90.000 ms)
 
     // 4. APPLE-STYLE PROJECT DETAIL MODAL OVERLAY DATA DICTIONARY
     const projectDetails = {
