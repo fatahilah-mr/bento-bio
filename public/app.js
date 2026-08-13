@@ -3,14 +3,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const chartInstances = {};
 
     // 1. INTERACTIVE CATEGORY FILTERS
-    const filterTabs = document.querySelectorAll('.filter-tab');
-    const projectCards = document.querySelectorAll('.project-card');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const projectCards = document.querySelectorAll('.card-project');
 
-    filterTabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            const filter = tab.getAttribute('data-filter');
-            filterTabs.forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
+    filterButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const filter = btn.getAttribute('data-filter');
+            filterButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
 
             projectCards.forEach(card => {
                 const category = card.getAttribute('data-category');
@@ -23,42 +23,93 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 2. CHART.JS REAL-TIME SMOOTH AREA CURVE RENDERER FOR ALL UPTIME KUMA MONITORS
-    const monitorsContainer = document.getElementById('monitors-container');
+    // 2. REAL-TIME JAKARTA CLOCK & DATE
+    const updateClock = () => {
+        const now = new Date();
+        const timeOptions = {
+            timeZone: 'Asia/Jakarta',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false
+        };
+        const timeString = new Intl.DateTimeFormat('id-ID', timeOptions).format(now);
+        const clockElem = document.getElementById('clock-time');
+        if (clockElem) clockElem.textContent = timeString.replace(/\./g, ':');
 
-    const renderMonitorCharts = (services) => {
-        if (!monitorsContainer || !Array.isArray(services)) return;
+        const dateOptions = {
+            timeZone: 'Asia/Jakarta',
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        };
+        const dateString = new Intl.DateTimeFormat('id-ID', dateOptions).format(now);
+        const dateElem = document.getElementById('clock-date');
+        if (dateElem) dateElem.textContent = dateString;
+    };
 
-        monitorsContainer.innerHTML = services.map((s, idx) => {
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    // 3. SVG SPEEDOMETER DIAL GENERATOR
+    const generateSpeedometerSvg = (pingMs) => {
+        const numericPing = typeof pingMs === 'number' ? pingMs : parseInt(pingMs) || 15;
+        // Map 0-5000ms to 0-100% dial angle
+        const percentage = Math.min(100, Math.max(5, (numericPing / 2000) * 100));
+        const strokeDash = (percentage / 100) * 126; // 126 is circumference of r=20 semi-circle
+
+        const color = numericPing < 100 ? '#10b981' : numericPing < 1000 ? '#f59e0b' : '#f43f5e';
+
+        return `
+            <svg class="speedometer-svg" viewBox="0 0 60 60">
+                <circle cx="30" cy="30" r="22" fill="none" stroke="#1e293b" stroke-width="6" stroke-dasharray="138" stroke-dashoffset="35" stroke-linecap="round" />
+                <circle cx="30" cy="30" r="22" fill="none" stroke="${color}" stroke-width="6" stroke-dasharray="${strokeDash} 138" stroke-linecap="round" />
+                <text x="30" y="32" font-family="JetBrains Mono" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">${numericPing}ms</text>
+            </svg>
+        `;
+    };
+
+    // 4. CHART.JS & SPEEDOMETER RADAR MONITORS RENDERER
+    const radarContainer = document.getElementById('radar-monitors-grid');
+
+    const renderRadarMonitors = (services) => {
+        if (!radarContainer || !Array.isArray(services)) return;
+
+        radarContainer.innerHTML = services.map((s, idx) => {
             const isOnline = s.status === 'online';
-            const canvasId = `chart-canvas-${idx}`;
+            const canvasId = `radar-chart-${idx}`;
+            const numericPing = parseInt(s.ping) || parseInt(s.avgPing) || 15;
+            const speedometerSvg = generateSpeedometerSvg(numericPing);
 
             return `
-                <div class="monitor-card">
-                    <div class="monitor-card-header">
-                        <div class="monitor-name-group">
-                            <span class="dot-status ${isOnline ? 'online' : 'offline'}"></span>
-                            <span class="monitor-name">${escapeHtml(s.name)}</span>
+                <div class="gauge-card">
+                    <div class="gauge-card-header">
+                        <div class="gauge-title-group">
+                            <span class="live-pulse" style="background-color: ${isOnline ? '#10b981' : '#f43f5e'};"></span>
+                            <span class="gauge-name">${escapeHtml(s.name)}</span>
                         </div>
-                        <span class="monitor-ping-badge">${escapeHtml(s.ping || 'OK')}</span>
+                        <span class="gauge-ping-val">${escapeHtml(s.ping || 'OK')}</span>
                     </div>
 
-                    <!-- CHART.JS SMOOTH REAL-TIME LATENCY AREA CANVAS -->
-                    <div class="chart-canvas-wrapper">
-                        <canvas id="${canvasId}"></canvas>
+                    <div class="speedometer-wrap">
+                        ${speedometerSvg}
+                        <div class="chart-canvas-box">
+                            <canvas id="${canvasId}"></canvas>
+                        </div>
                     </div>
 
-                    <div class="chart-card-footer">
-                        <span>24h Uptime: ${escapeHtml(s.uptime24h || '99.9%')}</span>
+                    <div class="gauge-card-footer">
+                        <span>24h: ${escapeHtml(s.uptime24h || '99.9%')}</span>
                         <span>AVG: ${escapeHtml(s.avgPing || 'OK')}</span>
                     </div>
                 </div>
             `;
         }).join('');
 
-        // Initialize Chart.js for each monitor canvas
+        // Initialize Chart.js Area Curves
         services.forEach((s, idx) => {
-            const canvasId = `chart-canvas-${idx}`;
+            const canvasId = `radar-chart-${idx}`;
             const ctx = document.getElementById(canvasId)?.getContext('2d');
             if (!ctx) return;
 
@@ -76,12 +127,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const minVal = Math.max(0, Math.min(...pings) * 0.85);
             const maxVal = Math.max(...pings) * 1.15;
 
-            // Gradient Fill
-            const gradient = ctx.createLinearGradient(0, 0, 0, 70);
+            const strokeColor = s.status === 'online' ? '#10b981' : '#f43f5e';
+            const gradient = ctx.createLinearGradient(0, 0, 0, 50);
             gradient.addColorStop(0, s.status === 'online' ? 'rgba(16, 185, 129, 0.45)' : 'rgba(244, 63, 94, 0.45)');
             gradient.addColorStop(1, 'rgba(0, 0, 0, 0.0)');
-
-            const strokeColor = s.status === 'online' ? '#10b981' : '#f43f5e';
 
             chartInstances[canvasId] = new Chart(ctx, {
                 type: 'line',
@@ -91,47 +140,31 @@ document.addEventListener('DOMContentLoaded', () => {
                         label: 'Latency (ms)',
                         data: pings,
                         borderColor: strokeColor,
-                        borderWidth: 2.2,
+                        borderWidth: 2,
                         fill: true,
                         backgroundColor: gradient,
-                        tension: 0.4, // Smooth Bezier Curve
-                        pointBackgroundColor: strokeColor,
-                        pointBorderColor: '#07090e',
-                        pointBorderWidth: 1.5,
-                        pointRadius: 2.5,
-                        pointHoverRadius: 5,
-                        pointHoverBackgroundColor: '#ffffff'
+                        tension: 0.45,
+                        pointRadius: 0,
+                        pointHoverRadius: 4
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    animation: {
-                        duration: 600,
-                        easing: 'easeOutQuart'
-                    },
+                    animation: { duration: 600 },
                     plugins: {
                         legend: { display: false },
                         tooltip: {
                             callbacks: {
-                                label: (context) => `Ping: ${context.parsed.y} ms`
+                                label: (ctx) => `Ping: ${ctx.parsed.y} ms`
                             },
-                            backgroundColor: 'rgba(7, 9, 14, 0.95)',
-                            titleFont: { family: 'Plus Jakarta Sans', size: 11, weight: 'bold' },
-                            bodyFont: { family: 'JetBrains Mono', size: 12 },
-                            padding: 10,
-                            borderColor: strokeColor,
-                            borderWidth: 1,
-                            cornerRadius: 8
+                            backgroundColor: '#000000',
+                            bodyFont: { family: 'JetBrains Mono', size: 11 }
                         }
                     },
                     scales: {
                         x: { display: false },
-                        y: {
-                            display: false,
-                            min: minVal,
-                            max: maxVal
-                        }
+                        y: { display: false, min: minVal, max: maxVal }
                     }
                 }
             });
@@ -144,14 +177,13 @@ document.addEventListener('DOMContentLoaded', () => {
         return div.innerHTML;
     }
 
-    // 3. FETCH REAL DATA FROM VERCEL SERVERLESS FUNCTION CONNECTED TO UPTIME KUMA SLUG 'MONITOR'
     const fetchUptimeData = async () => {
         try {
             const res = await fetch('/api/status-stream');
             if (res.ok) {
                 const data = await res.json();
                 if (data.services) {
-                    renderMonitorCharts(data.services);
+                    renderRadarMonitors(data.services);
                 }
             }
         } catch (e) {
@@ -160,68 +192,133 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     fetchUptimeData();
-    setInterval(fetchUptimeData, 90000); // Poll every 90 seconds (90.000 ms)
+    setInterval(fetchUptimeData, 90000); // Refresh every 90s as requested
 
-    // 4. APPLE-STYLE PROJECT DETAIL MODAL OVERLAY DATA DICTIONARY
+    // 5. BUILT-IN AI ASSISTANT CHAT DRAWER LOGIC
+    const aiDrawer = document.getElementById('ai-chat-drawer');
+    const openAiBtn = document.getElementById('open-ai-chat-btn');
+    const closeAiBtn = document.getElementById('close-ai-chat-btn');
+    const chatForm = document.getElementById('chat-form');
+    const chatInput = document.getElementById('chat-input');
+    const chatMessages = document.getElementById('chat-messages');
+
+    if (openAiBtn) {
+        openAiBtn.addEventListener('click', () => {
+            aiDrawer.classList.add('active');
+            aiDrawer.setAttribute('aria-hidden', 'false');
+        });
+    }
+
+    if (closeAiBtn) {
+        closeAiBtn.addEventListener('click', () => {
+            aiDrawer.classList.remove('active');
+            aiDrawer.setAttribute('aria-hidden', 'true');
+        });
+    }
+
+    // Interactive AI Response Generator
+    const getAiResponse = (query) => {
+        const q = query.toLowerCase();
+
+        if (q.includes('proyek') || q.includes('project') || q.includes('web')) {
+            return "Fatahilah memiliki 9 proyek web unggulan di antaranya:\n1. FATAH Gateway (fatah.web.id)\n2. fmr.blog (blog.fatah.web.id)\n3. IT Lab & NSA Portfolio (fatahmr.my.id)\n4. Chef Arifin Culinary (arifin.fatah.web.id)\n5. Kwettiau Setia Wati (kwettiau.fatah.web.id)\n6. PERISAI Ayom Temon (ayom-temon.vercel.app)\n7. PERISAI Temon GIS (perisai-media-sosial.vercel.app)\n8. 9Router AI Gateway (9router.fatah.web.id)\n9. Status Page Uptime Kuma (status.fatah.web.id)";
+        } else if (q.includes('lks') || q.includes('prestasi') || q.includes('nsa') || q.includes('juara')) {
+            return "Fatahilah M.R adalah Juara 1 LKS IT Network System Administration 2026 tingkat provinsi/nasional, ahli dalam konfigurasi Cisco, MikroTik, Linux Enterprise, & otomatisasi AI!";
+        } else if (q.includes('9router') || q.includes('ai') || q.includes('gateway')) {
+            return "9Router adalah AI Gateway multi-provider (OpenAI, Claude, Groq, Ollama) yang dibangun Fatah dengan fitur SSE streaming real-time, public usage topology graph, dan rate-limiting pintar.";
+        } else if (q.includes('kontak') || q.includes('contact') || q.includes('github') || q.includes('telegram')) {
+            return "Anda bisa menghubungi Fatahilah via Telegram @BotFather atau melihat repositori kode lengkapnya di GitHub: github.com/fatahilah-mr";
+        } else {
+            return "Terima kasih atas pertanyaannya! Fatahilah M.R adalah Network Engineer & AI Systems Architect (Juara 1 LKS IT NSA 2026). Ada yang ingin Anda ketahui lebih lanjut tentang proyek web atau arsitektur servernya?";
+        }
+    };
+
+    if (chatForm) {
+        chatForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const text = chatInput.value.trim();
+            if (!text) return;
+
+            // Render User Message
+            const userMsgElem = document.createElement('div');
+            userMsgElem.className = 'chat-msg user';
+            userMsgElem.textContent = text;
+            chatMessages.appendChild(userMsgElem);
+            chatInput.value = '';
+
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Render Bot Response with typing delay
+            setTimeout(() => {
+                const botMsgElem = document.createElement('div');
+                botMsgElem.className = 'chat-msg bot';
+                botMsgElem.innerText = getAiResponse(text);
+                chatMessages.appendChild(botMsgElem);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 600);
+        });
+    }
+
+    // 6. NEO-BRUTALIST MODAL OVERLAY DATA DICTIONARY
     const projectDetails = {
         'modal-gateway': {
-            badge: 'PROJECT INSPECTOR // 01',
+            badge: '[PROJECT_INSPECT // 01]',
             title: 'FATAH Gateway',
             desc: 'Portal tautan pribadi ultra-cepat dan responsif dengan React 18, Vite, GSAP 3D tilt interaction, Glassmorphism CSS, & Sveltia CMS serverless OAuth.',
             demo: 'https://fatah.web.id',
             repo: 'https://github.com/fatahilah-mr/gateway'
         },
         'modal-blog': {
-            badge: 'PROJECT INSPECTOR // 02',
+            badge: '[PROJECT_INSPECT // 02]',
             title: 'fmr.blog Platform',
             desc: 'Blog pribadi & galeri portofolio interaktif berkinerja tinggi berbasis Astro 5, TypeScript, React 19, & Cloudflare Pages.',
             demo: 'https://blog.fatah.web.id',
             repo: 'https://github.com/fatahilah-mr/blog'
         },
         'modal-portfolio': {
-            badge: 'PROJECT INSPECTOR // 03',
+            badge: '[PROJECT_INSPECT // 03]',
             title: 'IT Lab & NSA Portfolio',
             desc: 'Portofolio pribadi berbasis Astro 5 & Google Sheets Headless CMS untuk mengarsip laboratorium IT Network, Server, & otomatisasi AI (Juara 1 LKS IT NSA 2026).',
             demo: 'https://fatahmr.my.id',
             repo: 'https://github.com/fatahilah-mr/portfolio'
         },
         'modal-arifin': {
-            badge: 'PROJECT INSPECTOR // 04',
+            badge: '[PROJECT_INSPECT // 04]',
             title: 'Chef Arifin Culinary Portfolio',
             desc: 'Platform portofolio digital mobile-first untuk chef & professional cook Arifin Prasetyo (React 19, TanStack Router, Tailwind CSS 4).',
             demo: 'https://arifin.fatah.web.id',
             repo: 'https://github.com/fatahilah-mr/arifin-prasetyo-portofolio'
         },
         'modal-kwettiau': {
-            badge: 'PROJECT INSPECTOR // 05',
+            badge: '[PROJECT_INSPECT // 05]',
             title: 'Kwettiau Setia Wati Portfolio',
             desc: 'Website portofolio interaktif bertema pink pastel untuk Setia Wati (React 19, Motion, Lucide React).',
             demo: 'https://kwettiau.fatah.web.id',
             repo: 'https://github.com/fatahilah-mr/web-setia-wati'
         },
         'modal-ayom': {
-            badge: 'PROJECT INSPECTOR // 06',
+            badge: '[PROJECT_INSPECT // 06]',
             title: 'PERISAI Ayom Temon',
             desc: 'Platform digital pengaduan anonim & penanganan cepat kekerasan perempuan dan anak (PPA) Kapanewon Temon berbasis Next.js 16, Supabase, Google Gemini 2.5 Flash, & Leaflet GIS.',
             demo: 'https://ayom-temon.vercel.app',
             repo: 'https://github.com/temonkec-cpu/AYOM-TEMON'
         },
         'modal-gis': {
-            badge: 'PROJECT INSPECTOR // 07',
+            badge: '[PROJECT_INSPECT // 07]',
             title: 'PERISAI Temon GIS',
             desc: 'Platform pengaduan publik dengan triase AI Google Gemini 2.0 Flash (1-3 detik), notifikasi email instan, & peta interaktif GIS 15 Kalurahan.',
             demo: 'https://perisai-media-sosial.vercel.app',
             repo: 'https://github.com/temonkec-cpu/Media-Sosial'
         },
         'modal-9router': {
-            badge: 'PROJECT INSPECTOR // 08',
+            badge: '[PROJECT_INSPECT // 08]',
             title: '9Router AI Gateway',
             desc: 'Multi-gateway AI router OpenAI/Claude/Groq/Ollama dengan SSE streaming engine & dashboard publik topologi node.',
             demo: 'https://9router.fatah.web.id/public-usage',
             repo: 'https://9router.fatah.web.id'
         },
         'modal-uptime': {
-            badge: 'PROJECT INSPECTOR // 09',
+            badge: '[PROJECT_INSPECT // 09]',
             title: 'Uptime Kuma Status Page',
             desc: 'Platform pemantauan kesehatan server, endpoint API, & bot 24/7 real-time dengan notifikasi push ke Telegram.',
             demo: 'https://status.fatah.web.id',
@@ -229,8 +326,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    const modalBackdrop = document.getElementById('modal-backdrop');
-    const modalClose = document.getElementById('modal-close');
+    const modalOverlay = document.getElementById('modal-overlay');
+    const modalClose = document.getElementById('modal-close-btn');
     const modalBadge = document.getElementById('modal-badge');
     const modalTitle = document.getElementById('modal-title');
     const modalBody = document.getElementById('modal-body');
@@ -241,30 +338,30 @@ document.addEventListener('DOMContentLoaded', () => {
         card.addEventListener('click', () => {
             const key = card.getAttribute('data-modal');
             const data = projectDetails[key];
-            if (data && modalBackdrop) {
+            if (data && modalOverlay) {
                 modalBadge.textContent = data.badge;
                 modalTitle.textContent = data.title;
                 modalBody.textContent = data.desc;
                 modalDemoBtn.setAttribute('href', data.demo);
                 modalRepoBtn.setAttribute('href', data.repo);
-                modalBackdrop.classList.add('active');
-                modalBackdrop.setAttribute('aria-hidden', 'false');
+                modalOverlay.classList.add('active');
+                modalOverlay.setAttribute('aria-hidden', 'false');
             }
         });
     });
 
     if (modalClose) {
         modalClose.addEventListener('click', () => {
-            modalBackdrop.classList.remove('active');
-            modalBackdrop.setAttribute('aria-hidden', 'true');
+            modalOverlay.classList.remove('active');
+            modalOverlay.setAttribute('aria-hidden', 'true');
         });
     }
 
-    if (modalBackdrop) {
-        modalBackdrop.addEventListener('click', (e) => {
-            if (e.target === modalBackdrop) {
-                modalBackdrop.classList.remove('active');
-                modalBackdrop.setAttribute('aria-hidden', 'true');
+    if (modalOverlay) {
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) {
+                modalOverlay.classList.remove('active');
+                modalOverlay.setAttribute('aria-hidden', 'true');
             }
         });
     }
