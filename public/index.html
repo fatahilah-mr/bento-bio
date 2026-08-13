@@ -3,94 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fatah — Portfolio, AI Gateway & Web Ecosystem</title>
-    <meta name="description" content="Personal Bento Grid Showcase of Fatahilah M.R (Juara 1 LKS IT NSA 2026) - Web Projects, AI Infrastructure & Systems">
+    <title>Fatahilah M.R — AI Engineer & Web Ecosystem Portal</title>
+    <meta name="description" content="Personal Bento Grid Portal & Live Infrastructure Hub of Fatahilah M.R (Juara 1 LKS IT Network System Administration 2026).">
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     
-    <!-- FontAwesome Icons -->
+    <!-- FontAwesome 6 Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="background-ambient">
+    <!-- AMBIENT GLOW BACKGROUND -->
+    <div class="background-ambient" aria-hidden="true">
         <div class="blob blob-1"></div>
         <div class="blob blob-2"></div>
         <div class="blob blob-3"></div>
+        <div class="grid-overlay"></div>
     </div>
 
+    <!-- MAIN CONTAINER -->
     <main class="container">
-        <!-- HEADER / NAVIGATION -->
+        
+        <!-- TOP HEADER BAR -->
         <header class="top-header">
             <div class="brand">
                 <span class="brand-badge">FATAH.WEB.ID</span>
-                <span class="sub-brand">Ecosystem Portal</span>
+                <span class="sub-brand">Ecosystem Hub</span>
             </div>
-            <div class="header-status">
-                <span class="status-pulse-dot"></span>
-                <span>All Systems Operational</span>
+            <div class="header-right">
+                <div class="header-status" id="global-status-badge">
+                    <span class="status-pulse-dot"></span>
+                    <span id="status-text">Infrastructure Operational</span>
+                </div>
             </div>
         </header>
 
-        <!-- BENTO GRID CONTAINER -->
-        <div class="bento-grid">
+        <!-- BENTO GRID SHOWCASE -->
+        <div class="bento-grid" id="bento-grid">
             
-            <!-- HERO / PROFILE BENTO CARD (Span 2 Cols) -->
-            <div class="bento-card card-hero col-span-2">
+            <!-- 1. HERO PROFILE CARD (Span 2 Cols) -->
+            <div class="bento-card card-hero col-span-2" data-tilt>
                 <div class="card-glow"></div>
-                <div class="hero-header">
-                    <div class="avatar-container">
-                        <div class="avatar">
-                            <span>F</span>
-                        </div>
-                        <div class="trophy-badge" title="Juara 1 LKS IT Network Admin 2026">
+                <div class="hero-top">
+                    <div class="avatar-wrapper">
+                        <div class="avatar">F</div>
+                        <div class="trophy-badge" title="Juara 1 LKS IT Network System Administration 2026">
                             <i class="fa-solid fa-trophy"></i>
                         </div>
                     </div>
-                    <div class="hero-titles">
-                        <div class="badge-pill">
-                            <i class="fa-solid fa-award"></i>
+                    <div class="hero-details">
+                        <div class="badge-achievement">
+                            <i class="fa-solid fa-award text-amber"></i>
                             <span>Juara 1 LKS IT Network System Admin 2026</span>
                         </div>
                         <h1 class="hero-name">Fatahilah M.R</h1>
-                        <p class="hero-tagline">Network Engineer, AI Systems Architect & Full-Stack Web Developer.</p>
+                        <p class="hero-bio">
+                            Network Engineer, AI Systems Architect & Full-Stack Web Developer. 
+                            Specializing in zero-latency AI gateways, serverless edge, & IT infrastructure.
+                        </p>
                     </div>
                 </div>
-                <div class="hero-footer">
-                    <div class="location-tag">
+
+                <div class="hero-bottom">
+                    <div class="meta-tag">
                         <i class="fa-solid fa-location-dot text-emerald"></i>
                         <span>Indonesia • WIB (UTC+7)</span>
                     </div>
-                    <div class="social-quick-links">
-                        <a href="https://github.com/fatahilah-mr" target="_blank" class="social-icon-btn" title="GitHub">
+                    <div class="social-actions">
+                        <a href="https://github.com/fatahilah-mr" target="_blank" class="icon-btn" aria-label="GitHub Profile">
                             <i class="fa-brands fa-github"></i>
                         </a>
-                        <a href="https://t.me/BotFather" target="_blank" class="social-icon-btn" title="Telegram Bot">
+                        <a href="https://t.me/BotFather" target="_blank" class="icon-btn" aria-label="Telegram Bot">
                             <i class="fa-brands fa-telegram"></i>
                         </a>
-                        <a href="https://fatah.web.id" target="_blank" class="social-icon-btn" title="Fatah Gateway">
+                        <a href="https://fatah.web.id" target="_blank" class="icon-btn" aria-label="Gateway Portal">
                             <i class="fa-solid fa-globe"></i>
                         </a>
-                        <a href="https://blog.fatah.web.id" target="_blank" class="social-icon-btn" title="fmr.blog">
+                        <a href="https://blog.fatah.web.id" target="_blank" class="icon-btn" aria-label="fmr.blog">
                             <i class="fa-solid fa-newspaper"></i>
                         </a>
                     </div>
                 </div>
             </div>
 
-            <!-- LIVE INFRASTRUCTURE SSE MONITOR (Span 1 Col) -->
-            <div class="bento-card card-status col-span-1">
+            <!-- 2. LIVE INFRASTRUCTURE SSE MONITOR (Span 1 Col) -->
+            <div class="bento-card card-status col-span-1" data-tilt>
                 <div class="card-header">
-                    <div class="card-title-icon bg-emerald-glow">
+                    <div class="title-icon bg-emerald-light">
                         <i class="fa-solid fa-server text-emerald"></i>
                     </div>
                     <div>
-                        <h3 class="card-title">Live Infrastructure</h3>
-                        <p class="card-subtitle">Real-time SSE Monitoring</p>
+                        <h2 class="card-title">Live Infrastructure</h2>
+                        <p class="card-subtitle">Real-time Uptime Kuma Stream</p>
                     </div>
                 </div>
                 <div class="service-list">
@@ -125,176 +133,163 @@
                 </div>
             </div>
 
-            <!-- FEATURED WEB PROJECTS SECTION (Span 3 Cols) -->
+            <!-- 3. SECTION HEADER FOR PROJECTS (Span 3 Cols) -->
             <div class="bento-card col-span-3 card-section-header">
-                <div class="section-title-wrap">
-                    <i class="fa-solid fa-cubes text-indigo"></i>
-                    <h2>Web Projects & Applications Ecosystem</h2>
+                <div class="section-title">
+                    <i class="fa-solid fa-cubes-stacked text-indigo"></i>
+                    <h2>Web Projects & Systems Ecosystem</h2>
                 </div>
-                <span class="projects-count">7 Production Apps</span>
+                <div class="filter-pills" id="filter-pills">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="ai">AI & Infra</button>
+                    <button class="filter-btn" data-filter="public">Public</button>
+                    <button class="filter-btn" data-filter="portfolio">Portfolio</button>
+                </div>
             </div>
 
             <!-- PROJECT 1: FATAH GATEWAY (fatah.web.id) -->
-            <div class="bento-card card-project col-span-1">
-                <div class="project-tag-bar">
-                    <span class="project-tag bg-indigo">React 18 + Vite</span>
-                    <span class="project-status">Active</span>
+            <div class="bento-card card-project col-span-1" data-category="portfolio" data-tilt>
+                <div class="project-header">
+                    <span class="tag bg-indigo">React 18 + Vite</span>
+                    <span class="status-pill">Active</span>
                 </div>
-                <h3 class="project-name">FATAH Gateway</h3>
+                <h3 class="project-title">FATAH Gateway</h3>
                 <p class="project-desc">Portal tautan pribadi ultra-cepat dengan GSAP 3D, Glassmorphism, & Sveltia CMS.</p>
-                <div class="project-links">
-                    <a href="https://fatah.web.id" target="_blank" class="btn-project-link">
-                        <span>Visit fatah.web.id</span>
-                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                    </a>
-                </div>
+                <a href="https://fatah.web.id" target="_blank" class="project-action-btn">
+                    <span>Visit fatah.web.id</span>
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
             </div>
 
             <!-- PROJECT 2: FMR BLOG (blog.fatah.web.id) -->
-            <div class="bento-card card-project col-span-1">
-                <div class="project-tag-bar">
-                    <span class="project-tag bg-emerald">Astro 5 + React 19</span>
-                    <span class="project-status">Active</span>
+            <div class="bento-card card-project col-span-1" data-category="portfolio" data-tilt>
+                <div class="project-header">
+                    <span class="tag bg-emerald">Astro 5 + React 19</span>
+                    <span class="status-pill">Active</span>
                 </div>
-                <h3 class="project-name">fmr.blog</h3>
-                <p class="project-desc">Platform blog & galeri riset laboratorium IT, otomatisasi AI, & jaringan.</p>
-                <div class="project-links">
-                    <a href="https://blog.fatah.web.id" target="_blank" class="btn-project-link">
-                        <span>Visit blog.fatah.web.id</span>
-                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                    </a>
-                </div>
+                <h3 class="project-title">fmr.blog</h3>
+                <p class="project-desc">Platform blog & galeri riset laboratorium IT, otomatisasi AI, & topologi jaringan.</p>
+                <a href="https://blog.fatah.web.id" target="_blank" class="project-action-btn">
+                    <span>Visit blog.fatah.web.id</span>
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
             </div>
 
-            <!-- PROJECT 3: FATAHILAH PORTFOLIO (fatahmr.my.id) -->
-            <div class="bento-card card-project col-span-1">
-                <div class="project-tag-bar">
-                    <span class="project-tag bg-amber">Astro 5 + Google Sheets</span>
-                    <span class="project-status">Featured</span>
+            <!-- PROJECT 3: IT LAB & NSA PORTFOLIO (fatahmr.my.id) -->
+            <div class="bento-card card-project col-span-1" data-category="portfolio" data-tilt>
+                <div class="project-header">
+                    <span class="tag bg-amber">Astro 5 + Google Sheets</span>
+                    <span class="status-pill">Featured</span>
                 </div>
-                <h3 class="project-name">IT Lab & NSA Portfolio</h3>
+                <h3 class="project-title">IT Lab & NSA Portfolio</h3>
                 <p class="project-desc">Portofolio interaktif Juara 1 LKS IT NSA dengan Google Sheets Headless CMS.</p>
-                <div class="project-links">
-                    <a href="https://fatahmr.my.id" target="_blank" class="btn-project-link">
-                        <span>Visit fatahmr.my.id</span>
-                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                    </a>
-                </div>
+                <a href="https://fatahmr.my.id" target="_blank" class="project-action-btn">
+                    <span>Visit fatahmr.my.id</span>
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
             </div>
 
             <!-- PROJECT 4: ARIFIN PRASETYO PORTFOLIO (arifin.fatah.web.id) -->
-            <div class="bento-card card-project col-span-1">
-                <div class="project-tag-bar">
-                    <span class="project-tag bg-rose">React 19 + Tailwind 4</span>
-                    <span class="project-status">Completed</span>
+            <div class="bento-card card-project col-span-1" data-category="portfolio" data-tilt>
+                <div class="project-header">
+                    <span class="tag bg-rose">React 19 + Tailwind 4</span>
+                    <span class="status-pill">Completed</span>
                 </div>
-                <h3 class="project-name">Chef Arifin Culinary</h3>
-                <p class="project-desc">Portofolio kuliner premium mobile-first untuk Professional Chef Arifin Prasetyo.</p>
-                <div class="project-links">
-                    <a href="https://arifin.fatah.web.id" target="_blank" class="btn-project-link">
-                        <span>Visit arifin.fatah.web.id</span>
-                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                    </a>
-                </div>
+                <h3 class="project-title">Chef Arifin Culinary</h3>
+                <p class="project-desc">Platform portofolio kuliner premium mobile-first untuk Professional Chef Arifin Prasetyo.</p>
+                <a href="https://arifin.fatah.web.id" target="_blank" class="project-action-btn">
+                    <span>Visit arifin.fatah.web.id</span>
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
             </div>
 
             <!-- PROJECT 5: KWETTIAU SETIA WATI (kwettiau.fatah.web.id) -->
-            <div class="bento-card card-project col-span-1">
-                <div class="project-tag-bar">
-                    <span class="project-tag bg-pink">React 19 + Motion</span>
-                    <span class="project-status">Completed</span>
+            <div class="bento-card card-project col-span-1" data-category="portfolio" data-tilt>
+                <div class="project-header">
+                    <span class="tag bg-pink">React 19 + Motion</span>
+                    <span class="status-pill">Completed</span>
                 </div>
-                <h3 class="project-name">Kwettiau Setia Wati</h3>
-                <p class="project-desc">Portofolio estetik bertema pink pastel dengan animasi Motion & Lucide React.</p>
-                <div class="project-links">
-                    <a href="https://kwettiau.fatah.web.id" target="_blank" class="btn-project-link">
-                        <span>Visit kwettiau.fatah.web.id</span>
-                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                    </a>
-                </div>
+                <h3 class="project-title">Kwettiau Setia Wati</h3>
+                <p class="project-desc">Website portofolio estetik bertema pink pastel dengan animasi Motion & Lucide React.</p>
+                <a href="https://kwettiau.fatah.web.id" target="_blank" class="project-action-btn">
+                    <span>Visit kwettiau.fatah.web.id</span>
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
             </div>
 
             <!-- PROJECT 6: PERISAI AYOM TEMON (ayom-temon.vercel.app) -->
-            <div class="bento-card card-project col-span-1">
-                <div class="project-tag-bar">
-                    <span class="project-tag bg-purple">Next.js 16 + Gemini AI</span>
-                    <span class="project-status">Public Service</span>
+            <div class="bento-card card-project col-span-1" data-category="public" data-tilt>
+                <div class="project-header">
+                    <span class="tag bg-purple">Next.js 16 + Gemini AI</span>
+                    <span class="status-pill">Public Service</span>
                 </div>
-                <h3 class="project-name">PERISAI Ayom Temon</h3>
-                <p class="project-desc">Platform pengaduan anonim PPA Kapanewon Temon berbasis AI Triage & GIS.</p>
-                <div class="project-links">
-                    <a href="https://ayom-temon.vercel.app" target="_blank" class="btn-project-link">
-                        <span>Visit ayom-temon</span>
-                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                    </a>
-                </div>
+                <h3 class="project-title">PERISAI Ayom Temon</h3>
+                <p class="project-desc">Platform pengaduan anonim PPA Kapanewon Temon berbasis AI Triage & Leaflet GIS.</p>
+                <a href="https://ayom-temon.vercel.app" target="_blank" class="project-action-btn">
+                    <span>Visit ayom-temon</span>
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
             </div>
 
             <!-- PROJECT 7: PERISAI MEDIA SOSIAL (perisai-media-sosial.vercel.app) -->
-            <div class="bento-card card-project col-span-1">
-                <div class="project-tag-bar">
-                    <span class="project-tag bg-cyan">Next.js 16 + Supabase</span>
-                    <span class="project-status">Public Service</span>
+            <div class="bento-card card-project col-span-1" data-category="public" data-tilt>
+                <div class="project-header">
+                    <span class="tag bg-cyan">Next.js 16 + Supabase</span>
+                    <span class="status-pill">Public Service</span>
                 </div>
-                <h3 class="project-name">PERISAI Temon GIS</h3>
+                <h3 class="project-title">PERISAI Temon GIS</h3>
                 <p class="project-desc">Portal respons cepat pengaduan publik dengan peta interaktif 15 Kalurahan Temon.</p>
-                <div class="project-links">
-                    <a href="https://perisai-media-sosial.vercel.app" target="_blank" class="btn-project-link">
-                        <span>Visit perisai-temon</span>
-                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                    </a>
-                </div>
+                <a href="https://perisai-media-sosial.vercel.app" target="_blank" class="project-action-btn">
+                    <span>Visit perisai-temon</span>
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
             </div>
 
-            <!-- 9ROUTER PUBLIC USAGE CARD -->
-            <div class="bento-card card-project col-span-1">
-                <div class="project-tag-bar">
-                    <span class="project-tag bg-amber">9Router AI SSE Engine</span>
-                    <span class="project-status">Operational</span>
+            <!-- PROJECT 8: 9ROUTER PUBLIC USAGE -->
+            <div class="bento-card card-project col-span-1" data-category="ai" data-tilt>
+                <div class="project-header">
+                    <span class="tag bg-amber">9Router AI SSE Engine</span>
+                    <span class="status-pill">Operational</span>
                 </div>
-                <h3 class="project-name">9Router Public Usage</h3>
+                <h3 class="project-title">9Router Public Usage</h3>
                 <p class="project-desc">Dashboard publik pemantauan real-time token, request, & topologi node AI provider.</p>
-                <div class="project-links">
-                    <a href="https://9router.fatah.web.id/public-usage" target="_blank" class="btn-project-link">
-                        <span>View Usage Topology</span>
-                        <i class="fa-solid fa-chart-line"></i>
-                    </a>
-                </div>
+                <a href="https://9router.fatah.web.id/public-usage" target="_blank" class="project-action-btn">
+                    <span>View Usage Topology</span>
+                    <i class="fa-solid fa-chart-line"></i>
+                </a>
             </div>
 
-            <!-- UPTIME KUMA STATUS CARD -->
-            <div class="bento-card card-project col-span-1">
-                <div class="project-tag-bar">
-                    <span class="project-tag bg-emerald">Uptime Monitoring</span>
-                    <span class="project-status">Live</span>
+            <!-- PROJECT 9: UPTIME KUMA STATUS PAGE -->
+            <div class="bento-card card-project col-span-1" data-category="ai" data-tilt>
+                <div class="project-header">
+                    <span class="tag bg-emerald">Uptime Monitoring</span>
+                    <span class="status-pill">Live</span>
                 </div>
-                <h3 class="project-name">Status Page (Uptime)</h3>
+                <h3 class="project-title">Status Page (Uptime)</h3>
                 <p class="project-desc">Halaman publik pemantauan kesehatan server, endpoint API, & bot 24/7.</p>
-                <div class="project-links">
-                    <a href="https://status.fatah.web.id" target="_blank" class="btn-project-link">
-                        <span>View Status Page</span>
-                        <i class="fa-solid fa-heart-pulse"></i>
-                    </a>
-                </div>
+                <a href="https://status.fatah.web.id" target="_blank" class="project-action-btn">
+                    <span>View Status Page</span>
+                    <i class="fa-solid fa-heart-pulse"></i>
+                </a>
             </div>
 
             <!-- TECH STACK & ENGINE BENTO CARD (Span 2 Cols) -->
-            <div class="bento-card card-tech col-span-2">
+            <div class="bento-card card-tech col-span-2" data-tilt>
                 <div class="card-header">
-                    <div class="card-title-icon bg-indigo-glow">
+                    <div class="title-icon bg-indigo-light">
                         <i class="fa-solid fa-layer-group text-indigo"></i>
                     </div>
                     <div>
-                        <h3 class="card-title">Core Infrastructure & Stack</h3>
-                        <p class="card-subtitle">Technologies used across all projects</p>
+                        <h2 class="card-title">Core Architecture & Tech Stack</h2>
+                        <p class="card-subtitle">Technologies powering the entire ecosystem</p>
                     </div>
                 </div>
                 <div class="tech-tags">
                     <span class="tech-tag"><i class="fa-solid fa-rocket"></i> Astro 5 SSG</span>
                     <span class="tech-tag"><i class="fa-brands fa-react"></i> React 19 / 18</span>
-                    <span class="tech-tag"><i class="fa-solid fa-cube"></i> Next.js 16</span>
+                    <span class="tech-tag"><i class="fa-solid fa-cube"></i> Next.js 16 App Router</span>
                     <span class="tech-tag"><i class="fa-brands fa-node-js"></i> Node.js 24 ES</span>
-                    <span class="tech-tag"><i class="fa-solid fa-brain"></i> Google Gemini 2.5</span>
+                    <span class="tech-tag"><i class="fa-solid fa-brain"></i> Google Gemini 2.5 Flash</span>
                     <span class="tech-tag"><i class="fa-solid fa-database"></i> Supabase Postgres</span>
                     <span class="tech-tag"><i class="fa-solid fa-table"></i> Google Sheets CMS</span>
                     <span class="tech-tag"><i class="fa-brands fa-cloudflare"></i> Cloudflare Pages & Tunnel</span>
@@ -303,8 +298,8 @@
                 </div>
             </div>
 
-            <!-- JAKARTA REAL-TIME CLOCK CARD (Span 1 Col) -->
-            <div class="bento-card card-clock col-span-1">
+            <!-- JAKARTA REAL-TIME CLOCK BENTO CARD (Span 1 Col) -->
+            <div class="bento-card card-clock col-span-1" data-tilt>
                 <div class="clock-display">
                     <span id="clock-time">00:00:00</span>
                     <span id="clock-timezone">WIB • Asia/Jakarta</span>
@@ -316,7 +311,7 @@
 
         <!-- FOOTER -->
         <footer class="footer">
-            <p>© 2026 Fatahilah M.R (Juara 1 LKS IT NSA 2026) • Ecosystem Portal on Pterodactyl • Powered by Cloudflare Zero Trust</p>
+            <p>© 2026 Fatahilah M.R (Juara 1 LKS IT NSA 2026) • Ecosystem Portal on Vercel Edge • Powered by Cloudflare Zero Trust</p>
         </footer>
     </main>
 

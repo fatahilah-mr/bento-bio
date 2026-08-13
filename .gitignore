@@ -1,4 +1,55 @@
+# ===================================================================
+# BENTO BIO REPO - SECURITY & DATA LEAKAGE PROTECTION (.gitignore)
+# ===================================================================
+
+# Environment Variables & Secrets
+.env
+.env.*
+!.env.example
+*.env
+*.pem
+*.key
+*.cert
+*.crt
+*.pfx
+credentials.json
+secrets/
+config/local.json
+
+# Node Modules & Dependencies
 node_modules/
+jspm_packages/
+.pnpm-store/
+
+# Vercel & Build Outputs
 .vercel/
-.DS_Store
+.next/
+dist/
+build/
+out/
+.cache/
+
+# Logs & Debug Data
+logs/
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# System & OS Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE & Editor Files
+.idea/
+.vscode/
+*.swp
+*.swo
+.project
+.settings/
