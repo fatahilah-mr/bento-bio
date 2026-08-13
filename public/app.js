@@ -53,12 +53,12 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(updateClock, 1000);
 
     // 3. SVG SPEEDOMETER DIAL GENERATOR
-    const generateSpeedometerSvg = (pingMs) => {
-        const numericPing = typeof pingMs === 'number' ? pingMs : parseInt(pingMs) || 15;
+    const generateSpeedometerSvg = (pingMs, isOnline) => {
+        const numericPing = typeof pingMs === 'number' ? pingMs : parseInt(pingMs) || 25;
         const percentage = Math.min(100, Math.max(5, (numericPing / 2000) * 100));
         const strokeDash = (percentage / 100) * 126;
 
-        const color = numericPing < 100 ? '#10b981' : numericPing < 1000 ? '#f59e0b' : '#f43f5e';
+        const color = !isOnline ? '#f43f5e' : (numericPing < 200 ? '#10b981' : numericPing < 2000 ? '#f59e0b' : '#f43f5e');
 
         return `
             <svg class="speedometer-svg" viewBox="0 0 60 60">
@@ -78,17 +78,17 @@ document.addEventListener('DOMContentLoaded', () => {
         radarContainer.innerHTML = services.map((s, idx) => {
             const isOnline = s.status === 'online';
             const canvasId = `radar-chart-${idx}`;
-            const numericPing = parseInt(s.ping) || parseInt(s.avgPing) || 15;
-            const speedometerSvg = generateSpeedometerSvg(numericPing);
+            const numericPing = parseInt(s.ping) || parseInt(s.avgPing) || 25;
+            const speedometerSvg = generateSpeedometerSvg(numericPing, isOnline);
 
             return `
                 <div class="gauge-card">
                     <div class="gauge-card-header">
                         <div class="gauge-title-group">
-                            <span class="pulse-emerald" style="background-color: ${isOnline ? '#10b981' : '#f43f5e'};"></span>
+                            <span class="pulse-emerald" style="background-color: ${isOnline ? '#10b981' : '#f43f5e'}; box-shadow: 0 0 8px ${isOnline ? '#10b981' : '#f43f5e'};"></span>
                             <span class="gauge-name">${escapeHtml(s.name)}</span>
                         </div>
-                        <span class="gauge-ping-val">${escapeHtml(s.ping || 'OK')}</span>
+                        <span class="gauge-ping-val" style="background-color: ${isOnline ? '#a7f3d0' : '#fecdd3'};">${escapeHtml(s.ping || 'OK')}</span>
                     </div>
 
                     <div class="speedometer-wrap">
@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     <div class="gauge-card-footer">
                         <span>24h Uptime: ${escapeHtml(s.uptime24h || '99.9%')}</span>
-                        <span>AVG: ${escapeHtml(s.avgPing || 'OK')}</span>
+                        <span>STATUS: ${isOnline ? 'ONLINE 🟢' : 'OFFLINE 🔴'}</span>
                     </div>
                 </div>
             `;
@@ -116,19 +116,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 chartInstances[canvasId].destroy();
             }
 
+            const isOnline = s.status === 'online';
             const history = Array.isArray(s.history) && s.history.length > 0
                 ? s.history
                 : [{ ping: 35 }, { ping: 45 }, { ping: 38 }, { ping: 92 }, { ping: 40 }];
 
-            const pings = history.map(h => typeof h.ping === 'number' && h.ping > 0 ? h.ping : 10);
+            const pings = history.map(h => typeof h.ping === 'number' && h.ping > 0 ? h.ping : 25);
             const labels = pings.map((_, i) => `-${pings.length - i}m`);
 
             const minVal = Math.max(0, Math.min(...pings) * 0.85);
             const maxVal = Math.max(...pings) * 1.15;
 
-            const strokeColor = s.status === 'online' ? '#10b981' : '#f43f5e';
+            const strokeColor = isOnline ? '#10b981' : '#f43f5e';
             const gradient = ctx.createLinearGradient(0, 0, 0, 50);
-            gradient.addColorStop(0, s.status === 'online' ? 'rgba(16, 185, 129, 0.35)' : 'rgba(244, 63, 94, 0.35)');
+            gradient.addColorStop(0, isOnline ? 'rgba(16, 185, 129, 0.35)' : 'rgba(244, 63, 94, 0.35)');
             gradient.addColorStop(1, 'rgba(255, 255, 255, 0.0)');
 
             chartInstances[canvasId] = new Chart(ctx, {

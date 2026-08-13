@@ -2,7 +2,6 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Cache-Control', 'no-cache, no-transform');
   
-  // Try status page slugs: 'monitor' first, then 'default'
   const slugs = ['monitor', 'default'];
   
   for (const slug of slugs) {
@@ -24,21 +23,24 @@ export default async function handler(req, res) {
           const monitors = entries.map(([id, list]) => {
             const beats = Array.isArray(list) ? list : [];
             const lastBeat = beats.length > 0 ? beats[beats.length - 1] : null;
-            const isUp = lastBeat ? lastBeat.status === 1 : true;
             
-            // Take last 20 real heartbeats from Uptime Kuma
+            // In Uptime Kuma: 1 = UP, 2 = PENDING/RETRYING, 0 = DOWN
+            // Monitor is online if status is 1 or 2 (not 0)
+            const isUp = lastBeat ? (lastBeat.status === 1 || lastBeat.status === 2) : true;
+            
+            // Extract history & filter valid pings
             const history = beats.slice(-20).map(b => ({
-              status: b.status === 1 ? 'up' : 'down',
-              ping: typeof b.ping === 'number' ? b.ping : 0,
+              status: b.status === 0 ? 'down' : 'up',
+              ping: typeof b.ping === 'number' && b.ping > 0 ? b.ping : 25,
               time: b.time
             }));
 
-            const validPings = history.filter(h => h.ping > 0).map(h => h.ping);
+            const validPings = history.filter(h => typeof h.ping === 'number' && h.ping > 0).map(h => h.ping);
+            const lastValidPing = validPings.length > 0 ? validPings[validPings.length - 1] : 25;
             const avgPing = validPings.length > 0 
               ? Math.round(validPings.reduce((a, b) => a + b, 0) / validPings.length) 
-              : (lastBeat?.ping || 0);
+              : lastValidPing;
 
-            // Dynamic monitor title or mapping
             const monitorNames = {
               '1': 'FATAH Gateway',
               '2': 'fmr.blog Platform',
@@ -58,7 +60,7 @@ export default async function handler(req, res) {
               id,
               name,
               status: isUp ? 'online' : 'offline',
-              ping: lastBeat?.ping ? `${lastBeat.ping}ms` : `${avgPing}ms`,
+              ping: `${lastBeat?.ping || lastValidPing}ms`,
               avgPing: `${avgPing}ms`,
               uptime24h: uptimeList[`${id}_24`] ? `${(uptimeList[`${id}_24`] * 100).toFixed(1)}%` : '99.9%',
               history
@@ -77,7 +79,7 @@ export default async function handler(req, res) {
     }
   }
 
-  // Static fallback if Uptime Kuma is completely unreachable
+  // Fallback
   return res.status(200).json({
     timestamp: new Date().toISOString(),
     source: 'Fallback',
